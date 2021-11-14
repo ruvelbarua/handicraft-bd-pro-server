@@ -1,6 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
-const objectId = require('mongodb').ObjectId
+const objectId = require('mongodb').ObjectId;
+
 
 const cors = require('cors');
 require('dotenv').config();
@@ -23,7 +25,28 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        console.log('Database Connected Successfully');
+        const productCollection = client.db("handicraftsbd").collection("products");
+        // const ordersCollection = client.db("handicraftsbd").collection("orders");
+
+        // POST DATA
+        app.post("/addproducts", async (req, res) => {
+            console.log(req.body);
+            const resutl = await productCollection.insertOne(req.body);
+            res.send(resutl.insertedId);
+        });
+        // GET DATA
+        app.get("/products", async (req, res) => {
+            const result = await productCollection.find({}).toArray();
+            res.send(result);
+        });
+        // DETETE DATA
+        app.delete("/deleteProduct/:id", async (req, res) => {
+            const result = await productCollection.deleteOne({
+                _id: objectId(req.params.id),
+            });
+            res.send(result);
+        });
+
     }
     finally {
         // await client.close();
@@ -38,6 +61,6 @@ app.get('/', (req, res) => {
 
 // Internal Server Test
 app.listen(port, () => {
-    console.log('Handicraft BD Server on Port', port)
+    console.log('Handicraft BD Server on Port', port);
 })
 
