@@ -28,6 +28,11 @@ async function run() {
         const productCollection = client.db("handicraftsbd").collection("products");
         // const ordersCollection = client.db("handicraftsbd").collection("orders");
 
+        // ORDER POST from ProductOrder Page
+        app.post("/orderdata", async (req, res) => {
+            console.log(req.body);
+        })
+
         // POST DATA
         app.post("/addproducts", async (req, res) => {
             console.log(req.body);
@@ -45,6 +50,32 @@ async function run() {
                 _id: objectId(req.params.id),
             });
             res.send(result);
+        });
+        // GET SINGLE DATA
+        app.get("/singleProduct/:id", async (req, res) => {
+            // console.log(req.params.id)
+            const result = await productCollection.findOne({ _id: objectId(req.params.id) })
+                .then((result) => {
+                    res.send(result)
+                })
+            console.log(result)
+        });
+        // UPDATE SINGLE DATA
+        app.put("/update/:id", (req, res) => {
+            const id = req.params.id;
+            const updateName = req.body;
+            const filter = { _id: objectId(id) };
+            productCollection
+                .updateOne(filter, {
+                    $set: {
+                        name: updateName.name,
+                        price: updateName.price,
+                        design: updateName.design,
+                    },
+                })
+                .then((result) => {
+                    res.send(result);
+                });
         });
 
     }
