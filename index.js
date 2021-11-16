@@ -34,34 +34,33 @@ async function run() {
         })
 
         // POST DATA
-        app.post("/addproducts", async (req, res) => {
+        app.post('/addproducts', async (req, res) => {
             console.log(req.body);
             const resutl = await productCollection.insertOne(req.body);
             res.send(resutl.insertedId);
         });
         // GET DATA
-        app.get("/products", async (req, res) => {
+        app.get('/products', async (req, res) => {
             const result = await productCollection.find({}).toArray();
             res.send(result);
         });
         // DETETE DATA
-        app.delete("/deleteProduct/:id", async (req, res) => {
+        app.delete('/deleteProduct/:id', async (req, res) => {
             const result = await productCollection.deleteOne({
                 _id: objectId(req.params.id),
             });
             res.send(result);
         });
         // GET SINGLE DATA
-        app.get("/singleProduct/:id", async (req, res) => {
-            // console.log(req.params.id)
-            const result = await productCollection.findOne({ _id: objectId(req.params.id) })
-                .then((result) => {
-                    res.send(result)
-                })
-            console.log(result)
+        app.get('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: objectId(id) };
+            const product =
+                await productCollection.findOne(query);
+            res.json(product)
         });
         // UPDATE SINGLE DATA
-        app.put("/update/:id", (req, res) => {
+        app.put('/update/:id', (req, res) => {
             const id = req.params.id;
             const updateName = req.body;
             const filter = { _id: objectId(id) };
