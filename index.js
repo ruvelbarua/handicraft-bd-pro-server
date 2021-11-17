@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const objectId = require('mongodb').ObjectId;
 
-
 const cors = require('cors');
 require('dotenv').config();
 
@@ -33,17 +32,20 @@ async function run() {
             console.log(req.body);
         })
 
+        // GET DATA
+        app.get('/products', async (req, res) => {
+            const cursor = productCollection.find({});
+            const products = await cursor.toArray();
+            res.send(products);
+        });
+
         // POST DATA
         app.post('/addproducts', async (req, res) => {
             console.log(req.body);
             const resutl = await productCollection.insertOne(req.body);
             res.send(resutl.insertedId);
         });
-        // GET DATA
-        app.get('/products', async (req, res) => {
-            const result = await productCollection.find({}).toArray();
-            res.send(result);
-        });
+
         // DETETE DATA
         app.delete('/deleteProduct/:id', async (req, res) => {
             const result = await productCollection.deleteOne({
