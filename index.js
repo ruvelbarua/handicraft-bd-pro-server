@@ -25,11 +25,16 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db("handicraftsbd").collection("products");
-        // const ordersCollection = client.db("handicraftsbd").collection("orders");
+        const ordersCollection = client.db("handicraftsbd").collection("orders");
 
-        // ORDER POST from ProductOrder Page
-        app.post("/orderdata", async (req, res) => {
-            console.log(req.body);
+        // ORDER POST from OrderData Page
+        app.post("/orders", async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            console.log(query);
+            const cursor = ordersCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders)
         })
 
         // GET DATA
@@ -46,13 +51,6 @@ async function run() {
             res.send(resutl.insertedId);
         });
 
-        // DETETE DATA
-        app.delete('/deleteProduct/:id', async (req, res) => {
-            const result = await productCollection.deleteOne({
-                _id: objectId(req.params.id),
-            });
-            res.send(result);
-        });
         // GET SINGLE DATA
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
@@ -61,6 +59,15 @@ async function run() {
                 await productCollection.findOne(query);
             res.json(product)
         });
+
+        // DETETE PRODACT
+        app.delete('/products/:id', async (req, res) => {
+            const result = await productCollection.deleteOne({
+                _id: objectId(req.params.id),
+            });
+            res.send(result);
+        });
+
         // UPDATE SINGLE DATA
         app.put('/update/:id', (req, res) => {
             const id = req.params.id;
