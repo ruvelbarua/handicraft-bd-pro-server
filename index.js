@@ -25,17 +25,10 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db("handicraftsbd").collection("products");
-        const ordersCollection = client.db("handicraftsbd").collection("orders");
+        // user data link
+        // const usersCollection = database.collection('users');
+        // const orderCollection = client.db("handicraftsbd").collection("productorders");
 
-        // ORDER POST from OrderData Page
-        app.post("/orders", async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email }
-            console.log(query);
-            const cursor = ordersCollection.find(query);
-            const orders = await cursor.toArray();
-            res.json(orders)
-        })
 
         // GET DATA
         app.get('/products', async (req, res) => {
@@ -95,7 +88,7 @@ run().catch(console.dir);
 
 // Live Server Test
 app.get('/', (req, res) => {
-    res.send('Handicraft BD Server Running');
+    res.send('abcd');
 });
 
 // Internal Server Test
@@ -103,3 +96,34 @@ app.listen(port, () => {
     console.log('Handicraft BD Server on Port', port);
 })
 
+
+// // GET PRODUCT ORDER
+        // app.post('/productorders', async (req, res) => {
+        //     const productorder = req.body;
+        //     const result = await orderCollection.insertOne(productorder);
+        //     confole.log(result);
+        //     res.json(result)
+        // });
+
+        // // Collection User Data
+        // app.post('/users', async (req, res) => {
+        //     const user = req.body;
+        //     const result = await usersCollection.insertOne(user);
+        //     console.log(result)
+        //     res.json(result);
+        // })
+
+        // // Update User Data
+        // app.put('/users', async (req, res) => {
+
+        // })
+
+        // // ORDER POST from OrderData Page
+        // app.post("/orders", async (req, res) => {
+        //     const email = req.query.email;
+        //     const query = { email: email }
+        //     console.log(query);
+        //     const cursor = ordersCollection.find(query);
+        //     const orders = await cursor.toArray();
+        //     res.json(orders)
+        // })
