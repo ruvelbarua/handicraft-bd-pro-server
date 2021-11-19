@@ -88,7 +88,7 @@ run().catch(console.dir);
 
 // Live Server Test
 app.get('/', (req, res) => {
-    res.send('abcd');
+    res.send('Test Handicraft Page');
 });
 
 // Internal Server Test
