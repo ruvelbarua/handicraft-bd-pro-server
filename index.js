@@ -4,6 +4,7 @@ const { MongoClient } = require('mongodb');
 const objectId = require('mongodb').ObjectId;
 
 const cors = require('cors');
+const res = require('express/lib/response');
 require('dotenv').config();
 
 const app = express();
@@ -26,9 +27,25 @@ async function run() {
         await client.connect();
         const productCollection = client.db("handicraftsbd").collection("products");
         // user data link
-        // const usersCollection = database.collection('users');
-        // const orderCollection = client.db("handicraftsbd").collection("productorders");
+        const usersCollection = client.db("handicraftsbd").collection("users");
 
+        // GET Email Data
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+
+        // User Email Cheack & Update
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
 
         // GET DATA
         app.get('/products', async (req, res) => {
@@ -97,33 +114,4 @@ app.listen(port, () => {
 })
 
 
-// // GET PRODUCT ORDER
-        // app.post('/productorders', async (req, res) => {
-        //     const productorder = req.body;
-        //     const result = await orderCollection.insertOne(productorder);
-        //     confole.log(result);
-        //     res.json(result)
-        // });
 
-        // // Collection User Data
-        // app.post('/users', async (req, res) => {
-        //     const user = req.body;
-        //     const result = await usersCollection.insertOne(user);
-        //     console.log(result)
-        //     res.json(result);
-        // })
-
-        // // Update User Data
-        // app.put('/users', async (req, res) => {
-
-        // })
-
-        // // ORDER POST from OrderData Page
-        // app.post("/orders", async (req, res) => {
-        //     const email = req.query.email;
-        //     const query = { email: email }
-        //     console.log(query);
-        //     const cursor = ordersCollection.find(query);
-        //     const orders = await cursor.toArray();
-        //     res.json(orders)
-        // })
