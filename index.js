@@ -57,6 +57,18 @@ async function run() {
             res.json(result);
         })
 
+        // GET Admin & Email Cheack
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
         // GET DATA
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
