@@ -1,13 +1,13 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const app = express()
+// const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const objectId = require('mongodb').ObjectId;
-
 const cors = require('cors');
-const res = require('express/lib/response');
+// const admin = require("firebase-admin");
+// const res = require('express/lib/response');
 require('dotenv').config();
 
-const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
@@ -20,6 +20,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 // console.log(url);
+
 
 // Client Server Link
 async function run() {
@@ -45,12 +46,11 @@ async function run() {
             const updateDoc = { $set: user };
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
-        })
+        });
 
         // Make Admin With Real Email
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
-            console.log('put', user);
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
@@ -138,3 +138,44 @@ app.listen(port, () => {
 // Project Develop By: Ruvel Barua
 
 
+// -----Firebase Link-----
+// const serviceAccount = require('./handicraft-bd-firebase-adminsdk.json')
+// JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount)
+// });
+// -----------
+
+// -------Email Verify Token-------
+// async function verifyToken(req, res, next) {
+//     if (req.headers?.authorization?.startsWith('Bearer ')) {
+//         const token = req.headers.authorization.split('')[1];
+//         try {
+//             const decodedUser = await admin.auth().verifyIdToken(token);
+//             req.decodedEmail = decodedUser.email;
+//         }
+//         catch {
+
+//         }
+//     }
+//     next();
+// }
+
+// ------Email VerifyToken Note:---------
+// app.put('/users/admin', verifyToken, async (req, res) => {
+//     const user = req.body;
+//     const requester = req.decodedEmail;
+//     if (requester) {
+//         const requesterAccount = await usersCollection.findOne({ email: requester });
+//         if (requesterAccount.role === 'admin') {
+//             const filter = { email: user.email };
+//             const updateDoc = { $set: { role: 'admin' } };
+//             const result = await usersCollection.updateOne(filter, updateDoc);
+//             res.json(result);
+//         }
+//     }
+//     else {
+//         res.status(403).json({ message: 'you do not have access to make admin user' })
+//     }
+// })
