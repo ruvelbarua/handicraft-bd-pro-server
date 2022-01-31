@@ -34,7 +34,6 @@ async function run() {
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
-            console.log(result);
             res.json(result);
         });
 
@@ -60,7 +59,6 @@ async function run() {
         // GET Admin & Email Cheack
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            console.log(email)
             const query = { email: email };
             const user = await usersCollection.findOne(query);
             let isAdmin = false;
@@ -70,7 +68,7 @@ async function run() {
             res.json({ admin: isAdmin });
         })
 
-        // GET DATA
+        // GET ALL DATA
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
             const products = await cursor.toArray();
@@ -79,7 +77,6 @@ async function run() {
 
         // POST DATA
         app.post('/addproducts', async (req, res) => {
-            console.log(req.body);
             const resutl = await productCollection.insertOne(req.body);
             res.send(resutl.insertedId);
         });
@@ -88,8 +85,7 @@ async function run() {
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: objectId(id) };
-            const product =
-                await productCollection.findOne(query);
+            const product = await productCollection.findOne(query);
             res.json(product)
         });
 
