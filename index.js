@@ -1,11 +1,9 @@
 const express = require('express');
 const app = express()
-// const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const objectId = require('mongodb').ObjectId;
 const cors = require('cors');
-// const admin = require("firebase-admin");
-// const res = require('express/lib/response');
+
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
@@ -132,47 +130,10 @@ app.listen(port, () => {
     console.log('Handicraft BD Server on Port', port);
 })
 
+
+
 // Project Develop By: Ruvel Barua
+// Email: ruvel.br78@gmail.com
 
 
-// -----Firebase Link-----
-// const serviceAccount = require('./handicraft-bd-firebase-adminsdk.json')
-// JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
-// -----------
-
-// -------Email Verify Token-------
-// async function verifyToken(req, res, next) {
-//     if (req.headers?.authorization?.startsWith('Bearer ')) {
-//         const token = req.headers.authorization.split('')[1];
-//         try {
-//             const decodedUser = await admin.auth().verifyIdToken(token);
-//             req.decodedEmail = decodedUser.email;
-//         }
-//         catch {
-
-//         }
-//     }
-//     next();
-// }
-
-// ------Email VerifyToken Note:---------
-// app.put('/users/admin', verifyToken, async (req, res) => {
-//     const user = req.body;
-//     const requester = req.decodedEmail;
-//     if (requester) {
-//         const requesterAccount = await usersCollection.findOne({ email: requester });
-//         if (requesterAccount.role === 'admin') {
-//             const filter = { email: user.email };
-//             const updateDoc = { $set: { role: 'admin' } };
-//             const result = await usersCollection.updateOne(filter, updateDoc);
-//             res.json(result);
-//         }
-//     }
-//     else {
-//         res.status(403).json({ message: 'you do not have access to make admin user' })
-//     }
-// })
